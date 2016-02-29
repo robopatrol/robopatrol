@@ -14,6 +14,20 @@
 * Programming Language: Python (IDE: PyCharm)
 * Documentation: Google Drive
 
+
+# Install
+1. Install ROS for Ubuntu (experimental instructions available for OSX): http://wiki.ros.org/indigo/Installation/Ubuntu
+2. In addition, you will need to install the following debs for TurtleBot (as described [here] (http://wiki.ros.org/turtlebot/Tutorials/indigo/Turtlebot%20Installation#turtlebot.2BAC8-Tutorials.2BAC8-indigo.2BAC8-Debs_Installation.Debs_Installation) )
+
+ ```
+ sudo apt-get install ros-indigo-turtlebot ros-indigo-turtlebot-apps ros-indigo-turtlebot-interactions ros-indigo-turtlebot-simulator ros-indigo-kobuki-ftdi ros-indigo-rocon-remocon ros-indigo-rocon-qt-library ros-indigo-ar-track-alvar-msgs
+ ```
+3. For convenience, you may wish to source your setup.sh script from your .bashrc so that your environment is ready as soon as you log in. e.g.
+
+ ```
+ echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc
+ ```
+
 # Run
 
 ROS:
