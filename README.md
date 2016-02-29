@@ -43,6 +43,7 @@ rosrun turtlesim turtlesim_node
 ```
 
 Robo patrol:
+(change into your workspace folder, e.g. ```cd /RoboPatrol ``` )
 
 ```bash
 catkin_make
