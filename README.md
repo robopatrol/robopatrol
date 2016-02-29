@@ -13,3 +13,25 @@
 * TurtleBot runs on ROS (http://wiki.ros.org/)
 * Programming Language: Python (IDE: PyCharm)
 * Documentation: Google Drive
+
+# Run
+
+ROS:
+
+```bash
+roscore
+```
+
+Turtle Simulation:
+
+```bash
+rosrun turtlesim turtlesim_node
+```
+
+Robo patrol:
+
+```bash
+catkin_make
+source devel/setup.bash
+rosrun robopatrol main.py
+```
