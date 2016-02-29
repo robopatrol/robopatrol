@@ -30,27 +30,36 @@
 
 # Run
 
-ROS:
+##ROS:
 
 ```bash
 roscore
 ```
 
-Turtle Simulation:
+##Turtle Simulation:
 
 ```bash
 rosrun turtlesim turtlesim_node
 ```
 
-[Stage Simulation] (http://wiki.ros.org/turtlebot_stage/Tutorials/indigo/Bring%20up%20TurtleBot%20in%20stage):
+##[Stage Simulation] (http://wiki.ros.org/turtlebot_stage/Tutorials/indigo/Bring%20up%20TurtleBot%20in%20stage):
 
 ```roslaunch turtlebot_stage turtlebot_in_stage.launch```
 
-[Gazebo Simulation] (http://wiki.ros.org/turtlebot_gazebo/Tutorials/indigo/Gazebo%20Bringup%20Guide):
+##[Gazebo Simulation] (http://wiki.ros.org/turtlebot_gazebo/Tutorials/indigo/Gazebo%20Bringup%20Guide)
 
+Preparation: install additional deps
+
+
+```sudo apt-get install ros-indigo-turtlebot-apps ros-indigo-turtlebot-rviz-launchers```
+
+Start Gazebo
 ```roslaunch turtlebot_gazebo turtlebot_world.launch  ```
 
-Robo patrol:
+In an additional terminal, start the keyboard control:
+```roslaunch turtlebot_teleop keyboard_teleop.launch```
+
+##Robo patrol:
 (change into your workspace folder, e.g. ```cd /RoboPatrol ``` )
 
 ```bash
