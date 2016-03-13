@@ -1,2 +1,7 @@
 build/
-.gradle/
+devel/
+
+*.pyc
+
+.coverage
+.coverage.*

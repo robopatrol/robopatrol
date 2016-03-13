@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import rospy
 from geometry_msgs.msg import Twist
 
@@ -48,10 +46,4 @@ class RoboPatrol():
         rospy.loginfo("Stop RoboPatrol")
         self.cmd_vel.publish(Twist())
         rospy.sleep(1)
-    
 
-if __name__ == "__main__":
-    try:
-        RoboPatrol()
-    except:
-        rospy.loginfo("RoboPatrol terminated.")

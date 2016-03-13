@@ -1,0 +1,11 @@
+#!/usr/bin/env python
+
+import rospy
+from robopatrol import RoboPatrol
+
+
+if __name__ == "__main__":
+    try:
+        RoboPatrol()
+    except:
+        rospy.loginfo("RoboPatrol terminated.")
