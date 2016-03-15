@@ -74,10 +74,6 @@ install:
   - mkdir -p ~/catkin_ws/src
   - cd ~/catkin_ws
   - catkin init
-  # Create the devel/setup.bash (run catkin_make with an empty workspace) and
-  # source it to set the path variables.
-  - catkin build
-  - source devel/setup.bash
   # Add the package under integration to the workspace using a symlink.
   - ln -s $CI_SOURCE_PATH ./src/
 
@@ -89,7 +85,7 @@ before_script:
 script:
   - catkin build
   - catkin run_tests  # This always returns 0
-  - catkin_test_results
+  - catkin_test_results # This will return non-zero if a test fails.
 #  - $ENV_BIN nosetests --where=$PKG_SRC_DIR --with-coverage --cover-erase --cover-package=$PKG_NAME
 
 #after_success:
