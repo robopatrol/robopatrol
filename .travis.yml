@@ -63,7 +63,7 @@ before_install:
   - sudo sh -c "echo \"deb http://packages.ros.org/ros/ubuntu $ROS_CI_DESKTOP main\" > /etc/apt/sources.list.d/ros-latest.list"
   - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
   - sudo apt-get update -qq
-  - sudo apt-get install -y python-catkin-pkg python-rosdep ros-$ROS_DISTRO-catkin # python-coverage
+  - sudo apt-get install -y python-catkin-tools python-catkin-pkg python-rosdep ros-$ROS_DISTRO-catkin # python-coverage
   - source /opt/ros/$ROS_DISTRO/setup.bash
   # Prepare rosdep to install dependencies.
   - sudo rosdep init
@@ -73,10 +73,10 @@ before_install:
 install:
   - mkdir -p ~/catkin_ws/src
   - cd ~/catkin_ws
-  - catkin_init_workspace ./src/
+  - catkin init
   # Create the devel/setup.bash (run catkin_make with an empty workspace) and
   # source it to set the path variables.
-  - catkin_make
+  - catkin build
   - source devel/setup.bash
   # Add the package under integration to the workspace using a symlink.
   - ln -s $CI_SOURCE_PATH ./src/
@@ -87,8 +87,8 @@ before_script:
 
 # Compile and test.
 script:
-  - catkin_make
-  - catkin_make run_tests  # This always returns 0
+  - catkin build
+  - catkin run_tests  # This always returns 0
   - catkin_test_results
 #  - $ENV_BIN nosetests --where=$PKG_SRC_DIR --with-coverage --cover-erase --cover-package=$PKG_NAME
 
