@@ -1,6 +1,6 @@
 import rospy
 from geometry_msgs.msg import Twist
-kobuki_msgs.msg import BumperEvent
+from kobuki_msgs.msg import BumperEvent
 import random
 from math import radians
 
