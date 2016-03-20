@@ -1,6 +1,6 @@
 import rospy
 from geometry_msgs.msg import Twist
-from kobuki_msgs.msg import BumperEvent
+#from kobuki_msgs.msg import BumperEvent
 import random
 from math import radians
 
@@ -79,14 +79,14 @@ class RoboPatrol():
     #data.state: RELEASED(0), PRESSED(1)
     # copied from: https://canvas.harvard.edu/courses/7567/pages/getting-started-ros-turtlebot-sensors-and-code
     # might be useful to detect objects
-    def processBump(data):
-        global bump
-        if (data.state == BumperEvent.PRESSED):
-            bump = True
-        else:
-            bump = False
-        rospy.loginfo("Bumper Event")
-        rospy.loginfo(data.bumper)
+    # def processBump(data):
+    #     global bump
+    #     if (data.state == BumperEvent.PRESSED):
+    #         bump = True
+    #     else:
+    #         bump = False
+    #     rospy.loginfo("Bumper Event")
+    #     rospy.loginfo(data.bumper)
         
     def shutdown(self):
         rospy.loginfo("Stop RoboPatrol")
