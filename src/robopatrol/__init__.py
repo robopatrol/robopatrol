@@ -19,7 +19,7 @@ class RoboPatrol():
 
         self.cmd_vel = rospy.Publisher('cmd_vel_mux/input/navi', Twist, queue_size=10)
 
-        mode = input("Select operation mode: a (Autonmous), u (User controlled):")
+        mode = raw_input("Select operation mode: a (Autonomous), u (User controlled): ")
 
         if mode == 'a':
             self.drive_autonomous()
@@ -39,6 +39,10 @@ class RoboPatrol():
         distance -- the distance it will drive TODO provide unit
         turn -- the angle it will turn in degrees
         """
+
+        if turn > 0:
+            self.turn(turn)
+
         move_cmd = Twist()
         
         move_cmd.linear.x = speed
@@ -47,8 +51,7 @@ class RoboPatrol():
 
         move_cmd.angular.x = 0
         move_cmd.angular.y = 0
-        # TODO make sure 'turn' is between 0 and 360
-        move_cmd.angular.z = radians(turn)
+        move_cmd.angular.z = 0
 
         t0 = rospy.rostime.get_time()
         current_distance = 0
@@ -62,6 +65,32 @@ class RoboPatrol():
 
         self.cmd_vel.publish(Twist())
 
+
+    def turn(self, degree):
+        """Turns the bot by the given degrees.
+        """
+        move_cmd = Twist()
+        r = rospy.Rate(5.0)
+
+        move_cmd.linear.x = 0
+        move_cmd.linear.y = 0
+        move_cmd.linear.z = 0
+
+        move_cmd.angular.x = 0
+        move_cmd.angular.y = 0
+
+        yaw_rate = degree / 4
+        move_cmd.angular.z = radians(yaw_rate)   # turn with yaw_rate / sec for 4 sec
+
+        for i in range(20):         # 20*5hz = 4sec
+            self.cmd_vel.publish(move_cmd)
+            r.sleep()
+
+        move_cmd.angular.z = 0
+        self.cmd_vel.publish(move_cmd)
+
+        self.cmd_vel.publish(Twist())
+
     def drive_autonomous(self):
         """
         Lets the TurtleBot drive around by itself, distance and turn radius are
@@ -69,9 +98,11 @@ class RoboPatrol():
         """
         rospy.loginfo("Driving by myself")
         while not rospy.is_shutdown():
+
             speed = 0.5 # meter per seconds
-            distance = random.randint(1, 5) # TODO in which unit is this measured?
-            turn = random.randint(0, 45) # in degrees, will be converted to radians
+            # TODO drive until encounter obstacle, then turn
+            distance = random.randint(1, 5)
+            turn = random.randint(0, 45)
             self.move(speed, distance, turn)
 
     #if bump data is received, process here
@@ -79,14 +110,9 @@ class RoboPatrol():
     #data.state: RELEASED(0), PRESSED(1)
     # copied from: https://canvas.harvard.edu/courses/7567/pages/getting-started-ros-turtlebot-sensors-and-code
     # might be useful to detect objects
-    # def processBump(data):
-    #     global bump
-    #     if (data.state == BumperEvent.PRESSED):
-    #         bump = True
-    #     else:
-    #         bump = False
-    #     rospy.loginfo("Bumper Event")
-    #     rospy.loginfo(data.bumper)
+    #def detect_obstacle(self):
+    #
+     #   return False
         
     def shutdown(self):
         rospy.loginfo("Stop RoboPatrol")
