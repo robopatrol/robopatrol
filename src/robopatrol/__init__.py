@@ -1,6 +1,7 @@
 import rospy
 from geometry_msgs.msg import Twist
-#from kobuki_msgs.msg import BumperEvent
+from sensor_msgs.msg import LaserScan
+import numpy as np
 import random
 from math import radians
 
@@ -18,6 +19,10 @@ class RoboPatrol():
         rospy.on_shutdown(self.shutdown)
 
         self.cmd_vel = rospy.Publisher('cmd_vel_mux/input/navi', Twist, queue_size=10)
+        self.sub = rospy.Subscriber('scan', LaserScan, self.laser_callback)
+
+        self.closest = 0
+        self.position = 0
 
         mode = raw_input("Select operation mode: a (Autonomous), u (User controlled): ")
 
@@ -97,22 +102,45 @@ class RoboPatrol():
         currently determined randomly.
         """
         rospy.loginfo("Driving by myself")
+        speed = 0.5 # meter per seconds
+        distance = 0.1
         while not rospy.is_shutdown():
+            if self.detect_obstacle():
+                self.turn(30)
+            else:
+                self.move(speed, distance, 0)
 
-            speed = 0.5 # meter per seconds
-            # TODO drive until encounter obstacle, then turn
-            distance = random.randint(1, 5)
-            turn = random.randint(0, 45)
-            self.move(speed, distance, turn)
+    def detect_obstacle(self):
+        """
+        Returns True if the turtle bot sees an obstacle close ahead
+        """
+        return self.closest < 0.5
 
-    #if bump data is received, process here
-    #data.bumper: LEFT (0), CENTER (1), RIGHT (2)
-    #data.state: RELEASED(0), PRESSED(1)
-    # copied from: https://canvas.harvard.edu/courses/7567/pages/getting-started-ros-turtlebot-sensors-and-code
-    # might be useful to detect objects
-    #def detect_obstacle(self):
-    #
-     #   return False
+    def laser_callback(self, scan):
+        """
+        Callback called by the laser pubisher
+        """
+        self.getPosition(scan)
+        #rospy.loginfo("position: {0}" .format(self.position))
+        #rospy.loginfo("closest: {0}" .format(self.closest))
+
+    def getPosition(self, scan):
+        # Build a depths array to rid ourselves of any nan data inherent in scan.ranges.
+        depths = []
+        for dist in scan.ranges:
+            if not np.isnan(dist):
+                depths.append(dist)
+        #scan.ranges is a tuple, and we want an array.
+        fullDepthsArray = scan.ranges[:]
+
+        #If depths is empty that means we're way too close to an object to get a reading.
+        #thus establish our distance/position to nearest object as "0".
+        if len(depths) == 0:
+            self.closest = 0
+            self.position = 0
+        else:
+            self.closest = min(depths)
+            self.position = fullDepthsArray.index(self.closest)
         
     def shutdown(self):
         rospy.loginfo("Stop RoboPatrol")
