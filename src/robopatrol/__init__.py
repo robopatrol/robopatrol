@@ -18,6 +18,7 @@ class RoboPatrol():
 
         rospy.on_shutdown(self.shutdown)
 
+        # Publishers and Subscribers
         self.cmd_vel = rospy.Publisher('cmd_vel_mux/input/navi', Twist, queue_size=10)
         self.sub = rospy.Subscriber('scan', LaserScan, self.laser_callback)
 
@@ -29,20 +30,28 @@ class RoboPatrol():
         if mode == 'a':
             self.drive_autonomous()
         elif mode == 'u':
-            while not rospy.is_shutdown():
+            self.drive_user()
+        else:
+            rospy.loginfo("Invalid input: " + mode)
+
+    def drive_user(self):
+        """
+        Lets the user drive the TurtleBot. User inputs speed, distance and turn radius
+        via command line.
+        """
+        while not rospy.is_shutdown():
                 speed = input("Speed: ")
                 distance = input("Distance: ")
                 turn = input("Turn: ")
                 self.move(speed, distance, turn)
-        else:
-            rospy.loginfo("Invalid input: " + mode)
 
 
     def move(self, speed, distance, turn):
-        """Moves the TurtleBot by specified speed, distance and turn angle
-        speed -- the speed in meters / second
-        distance -- the distance it will drive TODO provide unit
-        turn -- the angle it will turn in degrees
+        """
+        Moves the TurtleBot by specified speed, distance and turn angle
+        :param speed: the speed in meters / second
+        :param distance: the distance it will drive TODO provide unit
+        :param turn: the angle it will turn in degrees
         """
 
         if turn > 0:
@@ -72,7 +81,9 @@ class RoboPatrol():
 
 
     def turn(self, degree):
-        """Turns the bot by the given degrees.
+        """
+        Turns the bot by the given degrees.
+        :param degree: by how many degrees the bot should turn
         """
         move_cmd = Twist()
         r = rospy.Rate(5.0)
@@ -102,7 +113,7 @@ class RoboPatrol():
         currently determined randomly.
         """
         rospy.loginfo("Driving by myself")
-        speed = 0.5 # meter per seconds
+        speed = 0.3 # meter per seconds
         distance = 0.1
         while not rospy.is_shutdown():
             if self.detect_obstacle():
@@ -119,12 +130,17 @@ class RoboPatrol():
     def laser_callback(self, scan):
         """
         Callback called by the laser pubisher
+        :param scan: scan object provided by laser publisher
         """
         self.getPosition(scan)
         #rospy.loginfo("position: {0}" .format(self.position))
         #rospy.loginfo("closest: {0}" .format(self.closest))
 
     def getPosition(self, scan):
+        """
+        Determines the TurtleBot's position using the laser scan.
+        :param scan: scan object provided by laser publisher
+        """
         # Build a depths array to rid ourselves of any nan data inherent in scan.ranges.
         depths = []
         for dist in scan.ranges:
@@ -143,6 +159,9 @@ class RoboPatrol():
             self.position = fullDepthsArray.index(self.closest)
         
     def shutdown(self):
+        """
+        Stops the Turtlebot.
+        """
         rospy.loginfo("Stop RoboPatrol")
         self.cmd_vel.publish(Twist())
         rospy.sleep(1)
