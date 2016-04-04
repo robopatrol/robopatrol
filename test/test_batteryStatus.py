@@ -1,24 +1,26 @@
 import unittest
 import batteryStatus
 
-class CheckBattery(unittest.TestCase):
+class CheckBaseBattery(unittest.TestCase):
 
-    def changingNetbookPower(self):
+    def changingBasePower(self):
 
         batteryStatus = batteryStatus()
         isCharging = isCharging()
+        batteryLevel = batteryLevel()
 
-        # this test will fail until you change the Greeter to return this expected message
+        # batteryStatus
         self.assertEqual(batteryStatus(20), "Kobuki battery is low")
         self.assertEqual(batteryStatus(20), "Kobuki battery is fine")
-
-        # this test will fail until you change the expected Value to 2
-        #self.assertTrue(netbookPower(24), lowNetbookBattery)
 
 
         # isCharging
         self.assertEqual(isCharging(0), "Stopped charging")
         self.assertEqual(isCharging(1), "Pumping petrol at the station")
+
+
+        # batteryLevel
+        self.assertEqual(batteryLevel(65), 65)
 
 if __name__ == '__main__':
     unittest.main()

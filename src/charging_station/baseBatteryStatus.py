@@ -6,15 +6,12 @@
 import rospy
 import roslib
 from kobuki_msgs.msg import SensorState
-from smart_battery_msgs.msg import SmartBatteryStatus    # needed for the netbook battery
 import math
 
 class BatteryStatus():
 
     lowBaseBattery = False
-    lowNetbookBattery = False
     basePreviousBatteryLevel = 100
-    netbookPreviousBatteryLevel = 100
     baseMaxCharge = 100
     # The maximum electric charge of the kobuki base can be determined by running:
     # rostopic echo /mobile_base/sensors/core 
@@ -40,9 +37,8 @@ class BatteryStatus():
 	if (math.fabs(int(data.battery) - basePreviousBatteryLevel) > 2):
 	    rospy.loginfo("Kobuki's battery is now: " + str(round(float(data.battery) / float(getBaseMaxCharge()) * 100)) + "%")
 	    basePreviousBatteryLevel = int(data.battery)
-	    returnValue = "Kobuki's battery is now: " + str(round(float(data.battery) / float(getBaseMaxCharge()) * 100)) + "%"
-	    
-	return returnValue
+	   
+	return basePreviousBatteryLevel
 
 	def isCharging(self, data):
 	if (int(data.charger) == 0):
@@ -74,20 +70,3 @@ class BatteryStatus():
 
 	return returnValue
 	
-
-# refactor to own class?
-    def netbookPowerEventCallback(self,data):
-	# has the netbook's power level changed?
-	if (int(data.percentage) != netbookPreviousBatteryLevel):
-	    rospy.loginfo("Notebook's battery is now: " + str(data.percentage) + "%")
-	    netbookPreviousBatteryLevel = int(data.percentage)
-	# is the netbook's power low?
-	if (int(data.percentage) < 25):
-            lowNetbookBattery = True
-	elif (int(data.percentage) > 35):
-	    # the logic of not using the same value (e.g. 25) for both the battery is low & battery is fine is that it'll leave and
-            # immediatly return for more power.
-	    lowNetbookBattery = False
-
-	# complete list of information available in the /laptop_charge/ thread
-	#print(data)
