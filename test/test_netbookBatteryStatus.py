@@ -1,5 +1,5 @@
 import unittest
-import batteryStatus
+import netbookBatteryStatus
 
 class CheckNetbookBattery(unittest.TestCase):
 

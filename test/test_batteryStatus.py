@@ -1,5 +1,5 @@
 import unittest
-import batteryStatus
+import baseBatteryStatus
 
 class CheckBaseBattery(unittest.TestCase):
 
