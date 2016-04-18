@@ -11,6 +11,10 @@ import rospy
 import psutil
 
 
+# change this
+# linux home dir (~/) doesn't work :(
+username = "remi"
+
 class RecordMap():
 
     def __init__(self):
@@ -21,13 +25,15 @@ class RecordMap():
 	rospy.loginfo("finished recording to " + bagfile)
 
 
+    # @param : int duration [seconds]
     # Returns the name of the bag file
     # A bag file (see rosbag documentation) is a container of recorded messages
     def startRecording(self,duration):
 	timestamp = time.time()
 	now = datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d_%H-%M-%S")
 
-        bagfile = "/home/remi/catkin_ws/src/robopatrol/robopatrol_" + now + ".bag"
+	bagfilePath = "/home/" + username + "/catkin_ws/src/robopatrol/"
+        bagfile = bagfilePath + "robopatrol_" + now + ".bag"
 
 	rospy.loginfo("Starting the recording process...")	
 	subprocess.call("rosbag record --duration=" + str(duration) + " -O " + bagfile + " scan tf", shell=True)
