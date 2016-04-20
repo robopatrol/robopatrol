@@ -4,6 +4,11 @@
   <node pkg="robopatrol" type="name_of_script" name="name_of_node">
   </node>
   -->
+
+  <!-- Map server -->
+  <arg name="map_file" default="$(env TURTLEBOT_GAZEBO_MAP_FILE)"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+  
   <!-- rosbridge websocket server -->
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
     <arg name="port" value="9090"/>
