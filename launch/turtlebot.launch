@@ -2,7 +2,10 @@
 <launch>
   <arg name="map_file"/>
 
+  <!-- bringup turtlebot -->
   <include file="$(find turtlebot_bringup)/launch/minimal.launch"></include>
+
+  <!-- robopatrol -->
   <include file="$(find robopatrol)/launch/robopatrol.launch">
     <arg name="map_file" value="$(arg map_file)"/>
   </include>
