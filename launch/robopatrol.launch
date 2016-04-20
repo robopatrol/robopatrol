@@ -1,10 +1,6 @@
 <!-- launch file to start robopatrol -->
 <launch>
-  <!-- Example node config:
-  <node pkg="robopatrol" type="name_of_script" name="name_of_node">
-  </node>
-  -->
-
+  
   <!-- Map server -->
   <arg name="map_file"/>
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
@@ -16,5 +12,5 @@
 
   <!-- robot pose publisher -->
   <node name="robot_pose_publisher" pkg="robot_pose_publisher" type="robot_pose_publisher" />
-  
+
 </launch>

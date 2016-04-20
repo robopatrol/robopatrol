@@ -1,7 +1,6 @@
 <!-- launch file to start gazebo simulation and robopatrol -->
 <launch>
   <arg name="map_file" default="$(env TURTLEBOT_GAZEBO_MAP_FILE)" doc="map file for gazebo simulation"/>
-
   <arg name="world_file"  default="$(env TURTLEBOT_GAZEBO_WORLD_FILE)" doc="world file for gazebo simulation"/>
 
   <arg name="base" value="$(optenv TURTLEBOT_BASE kobuki)"/> <!-- create, roomba -->
