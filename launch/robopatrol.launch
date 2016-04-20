@@ -12,6 +12,6 @@
   <!-- robot pose publisher -->
   <node name="robot_pose_publisher" pkg="robot_pose_publisher" type="robot_pose_publisher" />
 
-  <!-- slam gmapping -->
-  <include file="$(find turtlebot_navigation)/launch/includes/gmapping.launch.xml"/>
+  <!-- slam gmapping (does not work properly with webapp ros2djs/nav2djs) -->
+  <!--<include file="$(find turtlebot_navigation)/launch/includes/gmapping.launch.xml"/>-->
 </launch>
