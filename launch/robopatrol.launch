@@ -1,7 +1,7 @@
 <!-- launch file to start robopatrol -->
 <launch>
-  <!-- Map server -->
-  <arg name="map_file"/>
+  <!-- map server -->
+  <arg name="map_file" default="$(find robopatrol)/maps/empty.yaml"/>
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
 
   <!-- rosbridge websocket server -->

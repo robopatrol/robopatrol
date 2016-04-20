@@ -1,6 +1,6 @@
 <!-- launch file to run robopatrol on turtlebot -->
 <launch>
-  <arg name="map_file"/>
+  <arg name="map_file" default="$(find robopatrol)/maps/empty.yaml"/>
 
   <!-- bringup turtlebot -->
   <include file="$(find turtlebot_bringup)/launch/minimal.launch"></include>
