@@ -2,6 +2,8 @@
 <launch>
   <include file="$(find robopatrol)/launch/robopatrol.launch" >
   </include>
+  <arg name="world_file" default="$(env TURTLEBOT_GAZEBO_WORLD_FILE)" doc="world file for gazebo simulation"/>
   <include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch" >
+    <arg name="world_file" value="$(arg world_file)"/>
   </include>
 </launch>
