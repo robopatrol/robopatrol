@@ -13,4 +13,8 @@
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
     <arg name="port" value="9090"/>
   </include>
+
+  <!-- robot pose publisher -->
+  <node name="robot_pose_publisher" pkg="robot_pose_publisher" type="robot_pose_publisher" />
+  
 </launch>
