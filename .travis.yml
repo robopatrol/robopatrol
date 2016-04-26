@@ -88,6 +88,7 @@ before_script:
 # Compile and test.
 script:
   - catkin_make
+  - source devel/setup.bash
   - catkin_make run_tests  # This always returns 0
   - catkin_test_results # This will return non-zero if a test fails.
 #  - $ENV_BIN nosetests --where=$PKG_SRC_DIR --with-coverage --cover-erase --cover-package=$PKG_NAME
