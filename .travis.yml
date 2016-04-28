@@ -53,9 +53,6 @@ env:
     - OS_DISTRO="`lsb_release -cs`"  # e.g. [precise|trusty|...]
     - SOURCE_PATH=$(pwd)
     - CATKIN_WS=~/catkin_ws
-    #- PKG_NAME=robopatrol
-    #- PKG_SRC_DIR=./src/robopatrol
-    #- ENV_BIN=./devel/env.sh
 
 ################################################################################
 
@@ -64,7 +61,7 @@ before_install:
   - sudo sh -c "echo \"deb http://packages.ros.org/ros/ubuntu $OS_DISTRO main\" > /etc/apt/sources.list.d/ros-latest.list"
   - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
   - sudo apt-get update -qq
-  - sudo apt-get install -y python-catkin-pkg python-rosdep ros-$ROS_DISTRO-catkin # python-coverage
+  - sudo apt-get install -y python-catkin-pkg python-coverage python-rosdep ros-$ROS_DISTRO-catkin
   - source /opt/ros/$ROS_DISTRO/setup.bash
   # Prepare rosdep to install dependencies.
   - sudo rosdep init
@@ -89,7 +86,8 @@ before_script:
 script:
   - catkin_make run_tests  # This always returns 0
   - catkin_test_results # This will return non-zero if a test fails.
-#  - $ENV_BIN nosetests --where=$PKG_SRC_DIR --with-coverage --cover-erase --cover-package=$PKG_NAME
+  # coverage
+  - $CATKIN_WS/devel/env.sh nosetests --where=$SOURCE_PATH --with-coverage --cover-erase --cover-package=robopatrol
 
-#after_success:
-#  - coveralls
+after_success:
+  - coveralls
