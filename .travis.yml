@@ -60,7 +60,7 @@ env:
 
 # Install system dependencies, namely a very barebones ROS setup.
 before_install:
-  - pip install catkin_pkg coverage nose
+  - pip install catkin_pkg coverage nose rospkg
   - sudo sh -c "echo \"deb http://packages.ros.org/ros/ubuntu $OS_DISTRO main\" > /etc/apt/sources.list.d/ros-latest.list"
   - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
   - sudo apt-get update -qq
