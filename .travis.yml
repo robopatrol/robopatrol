@@ -65,10 +65,10 @@ before_install:
   - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
   - sudo apt-get update -qq
   - sudo apt-get install -y python-rosdep
-  - source /opt/ros/$ROS_DISTRO/setup.bash
   # Prepare rosdep to install dependencies.
   - sudo rosdep init
   - rosdep update
+  - source /opt/ros/$ROS_DISTRO/setup.bash
 
 # Install all dependencies, using rosdep.
 install:
