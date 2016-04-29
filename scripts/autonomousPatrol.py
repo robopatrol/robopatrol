@@ -134,15 +134,15 @@ class AutonomousPatrol():
 
     '''
     Starts the autonomous patrol.
-    
     '''
     def run(self):
 
         rospy.loginfo('Starting the initial mapping of the surrounding area...')
 
-	# Do some rotations and let the robot discover its surroundings
-	rad = -90 * math.pi / 180
-	self._rotate(rad)
+	# Do a complete rotation (2*PI) and let the robot discover its surroundings
+	rad = 90 * math.pi / 180
+	for i in range(0,3):
+	    self._rotate(rad)
 
 	rospy.loginfo('Mapping of the surrounding area is complete.')
 	rospy.loginfo('Ready to run.')
@@ -197,34 +197,35 @@ class AutonomousPatrol():
 	quaternionDifference = tf.transformations.quaternion_about_axis(rad, (0, 0, 1))
 	position, quaternion = self._getCurrentPosition()
 
-	for i in range(0,3):
-	    transformedQuaternion = tf.transformations.quaternion_multiply(quaternion, quaternionDifference)
-	    rotatorGoal = move_base_msgs.msg.MoveBaseGoal()
+        transformedQuaternion = tf.transformations.quaternion_multiply(quaternion, quaternionDifference)
+	rotatorGoal = move_base_msgs.msg.MoveBaseGoal()
 
- 	    rospy.loginfo(quaternion)
-	    rospy.loginfo(quaternionDifference)
+ 	rospy.loginfo(quaternion)
+	rospy.loginfo(quaternionDifference)
 
-	    # set coordinate frame
-	    rotatorGoal.target_pose.header.frame_id = self._coordinateFrame
+	# set coordinate frame
+	rotatorGoal.target_pose.header.frame_id = self._coordinateFrame
 
-            # set time stamp
-	    rotatorGoal.target_pose.header.stamp = rospy.Time.now()
+        # set time stamp
+	rotatorGoal.target_pose.header.stamp = rospy.Time.now()
 
-	    # set the pose (position + orientation)
-	    # position (3d point)
-	    rotatorGoal.target_pose.pose.position.x = position[0]
-	    rotatorGoal.target_pose.pose.position.y = position[1]
-	    rotatorGoal.target_pose.pose.position.z = position[2]
-	    # orientation
-	    rotatorGoal.target_pose.pose.orientation.x = transformedQuaternion[0]
-	    rotatorGoal.target_pose.pose.orientation.y = transformedQuaternion[1]
-	    rotatorGoal.target_pose.pose.orientation.z = transformedQuaternion[2]
-	    rotatorGoal.target_pose.pose.orientation.w = transformedQuaternion[3]
+	# set the pose (position + orientation)
+	# position (3d point)
+	rotatorGoal.target_pose.pose.position.x = position[0]
+	rotatorGoal.target_pose.pose.position.y = position[1]
+	rotatorGoal.target_pose.pose.position.z = position[2]
+	# orientation
+	rotatorGoal.target_pose.pose.orientation.x = transformedQuaternion[0]
+	rotatorGoal.target_pose.pose.orientation.y = transformedQuaternion[1]
+	rotatorGoal.target_pose.pose.orientation.z = transformedQuaternion[2]
+	rotatorGoal.target_pose.pose.orientation.w = transformedQuaternion[3]
 
-	    # now send the rotator goal to the navigation stack
-            self.client.send_goal(rotatorGoal)
-	    self.client.wait_for_result(rospy.Duration(5))
-    	    rospy.sleep(1)
+	# send the rotator goal to the navigation stack
+        self.client.send_goal(rotatorGoal)
+	if not self.client.wait_for_result(rospy.Duration(5)):
+	    rospy.loginfo('The base failed to rotate.')
+
+    	rospy.sleep(0.1)
 
 
     '''
