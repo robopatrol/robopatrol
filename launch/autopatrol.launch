@@ -11,7 +11,7 @@
   <arg name="laser_topic" default="scan" />
 
   <!-- Run the map server -->
-  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map)">
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map)" output="log">
   </node>
 
   <!--- Run AMCL (Adaptive Monte Carlo Localisation)
@@ -19,14 +19,14 @@
   <include file="$(find turtlebot_navigation)/launch/includes/amcl.launch.xml" />
 
   <!-- run SLAM -->
-  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping">
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="log" respawn="true">
   </node>
 
   <!-- ??? Do we need to submit the initial pose ???
 	start a node that's publishing to topic /initialpose after amcl ?? -->
 
   <!-- run move_base -->
-  <node pkg="move_base" type="move_base" name="move_base" output="screen" respawn="false">
+  <node pkg="move_base" type="move_base" name="move_base" output="log" respawn="false" required="true">
     <rosparam file="$(find turtlebot_navigation)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
     <rosparam file="$(find turtlebot_navigation)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />   
     <rosparam file="$(find turtlebot_navigation)/param/local_costmap_params.yaml" command="load" />   
@@ -51,4 +51,8 @@
   <!-- run the simulation -->
   <include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch" >
   </include>
+
+  <!-- run autonomous patrol -->
+  <node pkg="robopatrol" type="autonomousPatrol" name="Autonomous_RoboPatrol" output="screen" respawn="true">
+  </node>
 </launch>
