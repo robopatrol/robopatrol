@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 '''
-Node: Autonomous driving
+Node: Autonomous_RoboPatrol
 Author: R. Georgiou
 Version: 1.0
-Last modified: 29.04.2016
+Last modified: 01.05.2016
 
 
 This implementation uses a SimpleActionClient to connect to an ActionServer.
@@ -86,9 +86,8 @@ class AutonomousPatrol():
         rospy.Subscriber('odom', nav_msgs.msg.Odometry, self._setCurrentOdomPoseCallback)
 
 	self.pos, self.quat = self._getCurrentPosition()
-	rospy.loginfo(self.pos)
-	rospy.loginfo(self.quat)
-	#self._publishInitialPose()
+	rospy.loginfo("current position -> " + str(self.pos))
+	rospy.loginfo("current orientation -> " + str(self.quat))
 
 
     def _setCurrentOdomPoseCallback(self, pose):

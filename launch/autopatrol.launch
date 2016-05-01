@@ -10,6 +10,7 @@
   <arg name="odom_topic" default="odom" />
   <arg name="laser_topic" default="scan" />
 
+
   <!-- Run the map server -->
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map)" output="log">
   </node>
@@ -17,24 +18,21 @@
   <!--- Run AMCL (Adaptive Monte Carlo Localisation)
         AMCL is responsible for localizing the robot on the map -->
   <include file="$(find turtlebot_navigation)/launch/includes/amcl.launch.xml" />
-
+  
   <!-- run SLAM -->
-  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="log" respawn="true">
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="log" required="true">
   </node>
-
-  <!-- ??? Do we need to submit the initial pose ???
-	start a node that's publishing to topic /initialpose after amcl ?? -->
 
   <!-- run move_base -->
   <node pkg="move_base" type="move_base" name="move_base" output="log" respawn="false" required="true">
-    <rosparam file="$(find turtlebot_navigation)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find turtlebot_navigation)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />   
-    <rosparam file="$(find turtlebot_navigation)/param/local_costmap_params.yaml" command="load" />   
-    <rosparam file="$(find turtlebot_navigation)/param/global_costmap_params.yaml" command="load" />
-    <rosparam file="$(find turtlebot_navigation)/param/dwa_local_planner_params.yaml" command="load" />
-    <rosparam file="$(find turtlebot_navigation)/param/move_base_params.yaml" command="load" />
-    <rosparam file="$(find turtlebot_navigation)/param/global_planner_params.yaml" command="load" />
-    <rosparam file="$(find turtlebot_navigation)/param/navfn_global_planner_params.yaml" command="load" />
+    <rosparam file="$(find robopatrol)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find robopatrol)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />   
+    <rosparam file="$(find robopatrol)/param/local_costmap_params.yaml" command="load" />   
+    <rosparam file="$(find robopatrol)/param/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find robopatrol)/param/dwa_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find robopatrol)/param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find robopatrol)/param/global_planner_params.yaml" command="load" />
+    <rosparam file="$(find robopatrol)/param/navfn_global_planner_params.yaml" command="load" />
     
     <!-- reset frame_id parameters using user input data -->
     <param name="global_costmap/global_frame" value="$(arg global_frame_id)"/>
