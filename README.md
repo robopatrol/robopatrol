@@ -11,7 +11,7 @@ More technical documentation for developers can be found in [/docs](robopatrol/d
 
 ## Setup ROS and Robopatrol with Docker
 
-## Get Docker
+### Get Docker
 
 [Install Docker](https://docs.docker.com/engine/installation/) (or use Homebrew on OS X: `brew install docker docker-machine docker-compose`).
 
@@ -20,7 +20,7 @@ Linux can run Docker without a `docker-machine` VM. So Linux users may skip this
 On OS X and Windows a docker-machine needs to be created **once**:
 Virtualbox example: `docker create default --driver virtualbox` 
 
-## Run Robopatrol inside a Docker container
+### Run Robopatrol inside a Docker container
 
 Tell Docker to use the docker-machine: `eval $(docker-machine env)`
 
