@@ -2,6 +2,7 @@
 
 [![Travis Build Status](https://travis-ci.org/robopatrol/robopatrol.svg?branch=master)](https://travis-ci.org/robopatrol/robopatrol)
 [![Coverage Status](https://coveralls.io/repos/github/robopatrol/robopatrol/badge.svg?branch=master)](https://coveralls.io/github/robopatrol/robopatrol?branch=master)
+[![](https://imagelayers.io/badge/robopatrol/robopatrol:latest.svg)](https://imagelayers.io/?images=robopatrol/robopatrol:latest)
 
 ROS (Robot OS) nodes for Turtlebot.
 
