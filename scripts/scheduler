@@ -22,9 +22,10 @@ def do_patrol():
     waypoints = waypointDao.get_waypoints()
     # for each waypoint
     for waypoint in waypoints:
+        print('Waypoint: {0}').format(waypoint)
         # call action node to visit waypoint
         # if visit successful, update last_visited attribute on waypoint and save to server
-        waypointDao.post_job(waypoint)
+       # waypointDao.post_job(waypoint)
 
 #SCHEDULER FUNCTION SECTION END
 #######################################################################################################
@@ -33,16 +34,16 @@ def do_patrol():
 #ADD YOUR JOB HERE.
 job_listdict = [
     {
-        "name": "Sample schedule",
-        "pythonMethodName": my_job,
+        "name": my_job,
+        "displayName": "Sample job",
         "description": "Testjob, which tests the scheduler. (Remove as soon as this script is productive)",
         "cron": "*/5 * * * * *"
     },
     {
-        "name": "Hourly patrol",
-        "pythonMethodName": do_patrol,
+        "name": do_patrol,
+        "displayName": "Hourly Patrol",
         "description": "starts the patrol every hour",
-        "cron": "* 0 * * * *"
+        "cron": "*/10 * * * * *"
     }
     #,
 #    {

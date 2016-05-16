@@ -10,8 +10,7 @@ class ConfigDBDao:
         "properties": {
             "id": {"type": "string"},
             "name": {"type": "string"},
-            "description": {"type": "string"},
-            "pythonMethodName": {"type": "string"},
+            "displayName": {"type": "string"},
             "cron": {"type": "string"}
         },
         "required": ["id", "name", "cron"]

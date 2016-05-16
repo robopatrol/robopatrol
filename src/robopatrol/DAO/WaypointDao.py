@@ -10,9 +10,9 @@ class WaypointDao:
         "properties": {
             "id": {"type": "string"},
             "name": {"type": "string"},
-            "x": {"type": "int"},
-            "y": {"type": "int"},
-            "lastVisited": {"type": "Date"}
+            "x": {"type": "number"},
+            "y": {"type": "number"},
+            "lastVisited": {"type": "date-time"}
         },
         "required": ["id", "x", "y"]
     }
@@ -28,15 +28,21 @@ class WaypointDao:
             if myResponse.ok:
                 JData = json.loads(myResponse.content)
                 #Validate and remove invalid
-                for waypoint in JData:
-                    try:
-                        validate(waypoint, self.schema_waypoint)
-                    except ValidationError:
-                        JData.remove(waypoint)
+                # for waypoint in JData:
+                #     try:
+                #         print('validating')
+                #         validate(waypoint, self.schema_waypoint)
+                #         print('validated')
+                #     except ValidationError as e:
+                #         print 'there was a validation error {0}'.format(e.message)
+                #         JData.remove(waypoint)
             else:
+                print('response was not ok')
                 JData = None
         except (ValueError, ConnectionError):
+            print('there was an error')
             JData = None
+        print('returning data')
         return JData
 
     def post_job(self, waypoint):
