@@ -6,6 +6,7 @@ from datetime import datetime
 from robopatrol.DAO.ConfigDBDao import ConfigDBDao
 from robopatrol.Scheduler.RobopatrolScheduler import RobopatrolScheduler
 from robopatrol.DAO.WaypointDao import WaypointDao
+from robopatrol import MoveToPositionOnMap
 
 #CONFIGURATION
 poll_interval_sec = 5
@@ -17,15 +18,22 @@ def my_job():
 
 def do_patrol():
     print('Starting patrol')
+    # init move node
+    moveNode = MoveToPositionOnMap()
+    print('created move node')
+
     waypointDao = WaypointDao()
-    # fetch all waypoints from server
     waypoints = waypointDao.get_waypoints()
-    # for each waypoint
     for waypoint in waypoints:
         print('Waypoint: {0}').format(waypoint)
         # call action node to visit waypoint
+        point = [waypoint['x'], waypoint['y'], 0]
+        quarternion = [] #TODO fill in
+        success = moveNode.moveToPositionOnMap(point, quarternion)
         # if visit successful, update last_visited attribute on waypoint and save to server
-       # waypointDao.post_job(waypoint)
+        if success:
+            waypoint['lastVisited'] = datetime.now()
+            waypointDao.post_job(waypoint)
 
 #SCHEDULER FUNCTION SECTION END
 #######################################################################################################
