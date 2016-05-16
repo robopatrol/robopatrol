@@ -14,4 +14,4 @@ COPY . $robopatrol_ws/src/robopatrol
 RUN /bin/bash -c 'source /opt/ros/indigo/setup.bash && catkin_make'
 
 # Start Simulation
-CMD /bin/bash -c 'source $robopatrol_ws/devel/setup.bash && roslaunch robopatrol simulation.launch gui:=false'
+CMD /bin/bash -c 'source $robopatrol_ws/devel/setup.bash && roslaunch robopatrol autopatrol.launch gui:=false'
