@@ -5,6 +5,7 @@ from datetime import datetime
 
 from robopatrol.DAO.ConfigDBDao import ConfigDBDao
 from robopatrol.Scheduler.RobopatrolScheduler import RobopatrolScheduler
+from robopatrol.DAO.WaypointDao import WaypointDao
 
 #CONFIGURATION
 poll_interval_sec = 5
@@ -14,6 +15,16 @@ poll_interval_sec = 5
 def my_job():
     print('Tick! The time is: %s' % datetime.now())
 
+def do_patrol():
+    print('Starting patrol')
+    waypointDao = WaypointDao()
+    # fetch all waypoints from server
+    waypoints = waypointDao.get_waypoints()
+    # for each waypoint
+    for waypoint in waypoints:
+        # call action node to visit waypoint
+        # if visit successful, update last_visited attribute on waypoint and save to server
+        waypointDao.post_job(waypoint)
 
 #SCHEDULER FUNCTION SECTION END
 #######################################################################################################
@@ -22,10 +33,18 @@ def my_job():
 #ADD YOUR JOB HERE.
 job_listdict = [
     {
-        "name": my_job,
+        "name": "Sample schedule",
+        "pythonMethodName": my_job,
         "description": "Testjob, which tests the scheduler. (Remove as soon as this script is productive)",
         "cron": "*/5 * * * * *"
-    }#,
+    },
+    {
+        "name": "Hourly patrol",
+        "pythonMethodName": do_patrol,
+        "description": "starts the patrol every hour",
+        "cron": "* 0 * * * *"
+    }
+    #,
 #    {
 #        "name": my_function,
 #        "description": "COPY ME ( I AM LE TEMPLATE)",

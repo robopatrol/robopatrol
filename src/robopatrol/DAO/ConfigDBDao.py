@@ -11,6 +11,7 @@ class ConfigDBDao:
             "id": {"type": "string"},
             "name": {"type": "string"},
             "description": {"type": "string"},
+            "pythonMethodName": {"type": "string"},
             "cron": {"type": "string"}
         },
         "required": ["id", "name", "cron"]
