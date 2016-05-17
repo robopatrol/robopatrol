@@ -30,7 +30,7 @@ class TakePhoto:
         self.image_received = True
         self.image = cv_image
 
-    def take_picture(self, img_title):
+    def take_picture(self):
         if self.image_received:
             # Save an image
             return self.image

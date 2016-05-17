@@ -1,7 +1,7 @@
 from TakePhoto import TakePhoto
 import os
 import cv2
-
+import rospy
 
 class Camera:
 
@@ -9,9 +9,13 @@ class Camera:
         self.takePhoto = TakePhoto()
 
     def _get_photo_sequence(self):
+        #TODO: PhotoSequencing by reading database
         return 123
 
     def save_photo(self, photopath):
-        if os.path.exists(photopath):
-            img_title = self._get_photo_sequence()
-            cv2.imwrite(img_title, self.image)
+        img_title = self._get_photo_sequence()
+        image = self.get_photo()
+        cv2.imwrite(photopath, image)
+
+    def get_photo(self):
+        return self.takePhoto.take_picture()
