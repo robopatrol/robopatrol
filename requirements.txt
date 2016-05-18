@@ -5,3 +5,5 @@ python-coveralls
 rospkg
 jsonschema
 apscheduler
+requests
+cv2
