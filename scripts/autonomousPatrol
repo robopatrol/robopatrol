@@ -47,7 +47,7 @@ class AutonomousPatrol():
     __COORDINATE_FRAME_MAP = 'map'
 
     # [m]
-    __defaultDistanceX = 0.5
+    __defaultDistanceX = 0.2
     __defaultDistanceY = 0.0
 
 
@@ -299,13 +299,13 @@ class AutonomousPatrol():
 	goal = MoveBaseGoal()
 	goal.target_pose.header.frame_id = self.__COORDINATE_FRAME_BASE
 	goal.target_pose.header.stamp = rospy.Time.now()
-	goal.target_pose.pose.position.x = self.__defaultDistanceX
-	goal.target_pose.pose.position.y = self.__defaultDistanceY
+	goal.target_pose.pose.position.x = 3
+	goal.target_pose.pose.position.y = 0
 	goal.target_pose.pose.position.z = 0
 	goal.target_pose.pose.orientation.x = 0
 	goal.target_pose.pose.orientation.y = 0
 	goal.target_pose.pose.orientation.z = 0
-	goal.target_pose.pose.orientation.w = 0
+	goal.target_pose.pose.orientation.w = 1
 	self.moveTheBase(goal)
 	
 
@@ -320,18 +320,17 @@ class AutonomousPatrol():
 	self.printCurrentPosition()
 
 	pos, quat = self.getCurrentMapPosition()
-        self.mapPosition
 
 	goal = MoveBaseGoal()
 	goal.target_pose.header.frame_id = self.__COORDINATE_FRAME_BASE
 	goal.target_pose.header.stamp = rospy.Time.now()
-	goal.target_pose.pose.position.x = self.mapPosition.pose.pose.position.x #pos[0]
-	goal.target_pose.pose.position.y = self.mapPosition.pose.pose.position.y #pos[1]
-	goal.target_pose.pose.position.z = self.mapPosition.pose.pose.position.z #pos[2]
-	goal.target_pose.pose.orientation.x = self.mapPosition.pose.pose.orientation.x #quat[0]
-	goal.target_pose.pose.orientation.y = self.mapPosition.pose.pose.orientation.y #quat[1]
-	goal.target_pose.pose.orientation.z = self.mapPosition.pose.pose.orientation.z #quat[2]
-	goal.target_pose.pose.orientation.w = self.mapPosition.pose.pose.orientation.w #quat[3]
+	goal.target_pose.pose.position.x = pos[0]
+	goal.target_pose.pose.position.y = pos[1]
+	goal.target_pose.pose.position.z = pos[2]
+	goal.target_pose.pose.orientation.x = quat[0]
+	goal.target_pose.pose.orientation.y = quat[1]
+	goal.target_pose.pose.orientation.z = quat[2]
+	goal.target_pose.pose.orientation.w = quat[3]
 
 	self.client.send_goal(goal)
 	self.client.wait_for_result(rospy.Duration(30))
@@ -405,8 +404,6 @@ class AutonomousPatrol():
 	goal.target_pose.pose.orientation.w = quaternion[3]
 
 	self.moveTheBase(goal)
-	#self.client.send_goal(goal)
-	#self.client.wait_for_result(rospy.Duration(30))
 
 	newPos, newQuat = self.getCurrentMapPosition()
 	rospy.loginfo("targetPosition x -> " + str(pos[0]) + ", actualPosition x -> " + str(newPos[0]))
@@ -425,8 +422,13 @@ class AutonomousPatrol():
 if __name__ == '__main__':
     node = AutonomousPatrol()
     try:
-	#node.runAllTests()
 	node.startAutopatrol()
+	'''
+	for i in range(1,11):
+	    rospy.loginfo("***** test round " + str(i) + " *****")
+	    node.runAllTests()
+	    rospy.sleep(3)
+	'''
     except rospy.ROSInterruptException:
 	node.stop()
 
