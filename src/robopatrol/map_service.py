@@ -52,6 +52,25 @@ class MapService:
             self.handle_delete_map_request
         )
 
+        default_maps = [{
+            'name': 'Playground', 'filename': 'playground.yaml'
+        }, {
+            'name': 'Willow', 'filename': 'willow.yaml'
+        }, {
+            'name': 'ICC Lab', 'filename': 'icclab.yaml'
+        }]
+        maps = self.get_maps();
+
+        # ugly way to create default maps
+        for default_map in default_maps:
+            exists = False
+            for existing_map in maps:
+                if existing_map['filename'] == default_map['filename']:
+                    exists = True
+                    break
+            if not exists:
+                self.post_map(default_map)
+
         if len(args) > 1:
             self.start_map_server(args[1])
 
