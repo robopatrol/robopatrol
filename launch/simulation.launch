@@ -96,7 +96,7 @@
   </include>
 
   <!-- run autonomous patrol -->
-  <node pkg="robopatrol" type="autonomousPatrol" name="autopatrol" output="screen" respawn="true">
+  <node pkg="robopatrol" type="autonomousPatrol" name="autopatrol" output="screen" respawn="false">
   </node>
 
 </launch>
