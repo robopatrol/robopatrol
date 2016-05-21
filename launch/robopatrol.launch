@@ -2,8 +2,8 @@
 <launch>
   <!-- map server -->
   <arg name="map_file" default="$(find robopatrol)/maps/empty.yaml"/>
-  <!--<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />-->
-  <node name="map_service" pkg="robopatrol" type="map_service" args="empty.yaml" output="screen"/>
+
+  <node name="map_service" pkg="robopatrol" type="map_service" output="screen" />
 
   <!-- rosbridge websocket server -->
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
