@@ -1,9 +1,13 @@
 import subprocess, sys
+import subprocess, sys, os
 import json
 import rospy
 import rospkg
 import rosnode
 import rosgraph
+import requests
+
+from std_srvs.srv import Empty
 
 from robopatrol import srv
 
@@ -20,6 +24,8 @@ class MapService:
 
         rospy.loginfo("map_service: init")
 
+        self.rest_url = 'http://localhost:9998/maps'
+
         self.start_service = rospy.Service(
             'robopatrol/map_service/start',
             srv.MapServiceStart,
@@ -35,12 +41,34 @@ class MapService:
             srv.MapServiceRecord,
             self.handle_start_slam_gmapping_request
         )
+        self.save_service = rospy.Service(
+            'robopatrol/map_service/save',
+            srv.MapServiceSave,
+            self.handle_save_map_request
+        )
+        self.delete_service = rospy.Service(
+            'robopatrol/map_service/delete',
+            srv.MapServiceDelete,
+            self.handle_delete_map_request
+        )
 
         if len(args) > 1:
             self.start_map_server(args[1])
 
         rospy.on_shutdown(self.shutdown)
         rospy.spin()
+
+    def handle_save_map_request(self, request):
+        data = {'name': request.name, 'filename': request.filename}
+        response = self.post_map(data)
+
+        return srv.MapServiceSaveResponse(success=response.ok)
+
+    def handle_delete_map_request(self, request):
+        data = {'id': request.id}
+        response = self.delete_map(data)
+
+        return srv.MapServiceDeleteResponse(success=response.ok)
 
     def handle_start_map_server_request(self, request):
         success = self.start_map_server(request.filename)
@@ -56,6 +84,49 @@ class MapService:
         success = self.start_slam_gmapping()
 
         return srv.MapServiceRecordResponse(success=success)
+
+    def get_maps(self):
+        response = requests.get(self.rest_url)
+        data = json.loads(response.content)
+        return data
+
+    def get_map(self, map_id):
+        url = '{0}/{1}'.format(self.rest_url, map_id)
+        response = requests.get(url)
+        data = response.json()
+        return data
+
+    def post_map(self, data):
+        filename = data['filename']
+        if filename.endswith('.yaml'):
+            filename = filename[0:-5]
+
+        filepath = '{0}/maps/{1}'.format(ROSPKG.get_path('robopatrol'), filename)
+        subprocess.call(['rosrun', 'map_server', 'map_saver', '-f', filepath])
+
+        headers = {'Content-type': 'application/json'}
+        json_data = json.dumps(data)
+        response = requests.post(self.rest_url, data=json_data, headers=headers)
+
+        return response
+
+    def delete_map(self, data):
+        item = self.get_map(data['id'])
+        headers = {'Content-type': 'application/json'}
+        json_data = json.dumps(data)
+        url = '{0}/{1}'.format(self.rest_url, data['id'])
+        response = requests.delete(url, headers=headers)
+
+        if response.ok:
+            filename = item['filename']
+            if filename.endswith('.yaml'):
+                filename = filename[0:-5]
+            filepath = '{0}/maps/{1}'.format(ROSPKG.get_path('robopatrol'), filename)
+
+            os.remove('{0}.yaml'.format(filepath))
+            os.remove('{0}.pgm'.format(filepath))
+
+        return response
 
     def start_map_server(self, filename):
         self.stop_map_server()
@@ -118,4 +189,6 @@ class MapService:
         self.stop_slam_gmapping()
         self.start_service.shutdown()
         self.stop_service.shutdown()
+        self.save_service.shutdown()
+        self.delete_service.shutdown()
         self.record_service.shutdown()
