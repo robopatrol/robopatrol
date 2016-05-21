@@ -1,4 +1,3 @@
-import subprocess, sys
 import subprocess, sys, os
 import json
 import rospy
@@ -183,14 +182,18 @@ class MapService:
         self.stop_slam_gmapping()
         self.stop_map_server()
 
-        rospy.loginfo("map_service: start gmapping")
         self.processes['gmapping'] = subprocess.Popen(['rosrun', 'gmapping', 'slam_gmapping'])
 
         try:
             rospy.wait_for_service('/dynamic_map', timeout=5)
+            # for unknown reasons dynamic_map service is not callable
+            # therefore waiting one second until everything is initialized
+            rospy.sleep(1)
             success = True
         except rospy.ROSException, e:
             success = False
+
+        rospy.loginfo("map_service: start gmapping")
 
         return success
 
