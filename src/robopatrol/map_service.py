@@ -168,6 +168,12 @@ class MapService:
         process = self.processes.pop('map_server', None)
         if process is not None:
             rospy.loginfo("map_service: stop map server")
+            rospy.wait_for_service('/move_base/clear_costmaps')
+            try:
+                clear_costmaps = rospy.ServiceProxy('/move_base/clear_costmaps', Empty)
+                resp = clear_costmaps()
+            except rospy.ServiceException, e:
+                rospy.logwarn("map_service: clear costmaps failed")
             process.kill()
             self.cleanup('/map_server')
 
