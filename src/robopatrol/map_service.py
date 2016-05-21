@@ -23,12 +23,17 @@ class MapService:
         self.start_service = rospy.Service(
             'robopatrol/map_service/start',
             srv.MapServiceStart,
-            self.handle_start_request
+            self.handle_start_map_server_request
         )
         self.stop_service = rospy.Service(
             'robopatrol/map_service/stop',
             srv.MapServiceStop,
-            self.handle_stop_request
+            self.handle_stop_map_server_request
+        )
+        self.record_service = rospy.Service(
+            'robopatrol/map_service/record',
+            srv.MapServiceRecord,
+            self.handle_start_slam_gmapping_request
         )
 
         if len(args) > 1:
@@ -37,18 +42,24 @@ class MapService:
         rospy.on_shutdown(self.shutdown)
         rospy.spin()
 
-    def handle_start_request(self, request):
+    def handle_start_map_server_request(self, request):
         success = self.start_map_server(request.filename)
 
         return srv.MapServiceStartResponse(success=success)
 
-    def handle_stop_request(self, request):
+    def handle_stop_map_server_request(self, request):
         success = self.stop_map_server()
 
         return srv.MapServiceStopResponse(success=success)
 
+    def handle_start_slam_gmapping_request(self, request):
+        success = self.start_slam_gmapping()
+
+        return srv.MapServiceRecordResponse(success=success)
+
     def start_map_server(self, filename):
         self.stop_map_server()
+        self.stop_slam_gmapping()
 
         map_file = '{0}/maps/{1}'.format(ROSPKG.get_path('robopatrol'), filename)
 
@@ -72,6 +83,30 @@ class MapService:
 
         return True
 
+    def start_slam_gmapping(self):
+        self.stop_slam_gmapping()
+        self.stop_map_server()
+
+        rospy.loginfo("map_service: start gmapping")
+        self.processes['gmapping'] = subprocess.Popen(['rosrun', 'gmapping', 'slam_gmapping'])
+
+        try:
+            rospy.wait_for_service('/dynamic_map', timeout=5)
+            success = True
+        except rospy.ROSException, e:
+            success = False
+
+        return success
+
+    def stop_slam_gmapping(self):
+        process = self.processes.pop('gmapping', None)
+        if process is not None:
+            rospy.loginfo("map_service: stop gmapping")
+            process.kill()
+            self.cleanup('/gmapping')
+
+        return True
+
     def cleanup(self, node_name):
         master = rosgraph.Master(rosnode.ID)
         nodes_to_cleanup = [n for n in rosnode.get_node_names() if n.startswith(node_name)]
@@ -80,4 +115,7 @@ class MapService:
     def shutdown(self):
         rospy.loginfo("Shutdown robopatrol map service")
         self.stop_map_server()
-        self.map_service.shutdown()
+        self.stop_slam_gmapping()
+        self.start_service.shutdown()
+        self.stop_service.shutdown()
+        self.record_service.shutdown()
