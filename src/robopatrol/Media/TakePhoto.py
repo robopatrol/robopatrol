@@ -8,7 +8,7 @@ import rospy
 class TakePhoto:
     def __init__(self):
 
-        rospy.init_node('take_photo', anonymous=False)
+        # rospy.init_node('take_photo', anonymous=False)
         self.bridge = CvBridge()
         self.image_received = False
 

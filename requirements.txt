@@ -6,4 +6,3 @@ rospkg
 jsonschema
 apscheduler
 requests
-cv2
