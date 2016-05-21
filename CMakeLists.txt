@@ -62,6 +62,8 @@ add_service_files(
   MapServiceStart.srv
   MapServiceStop.srv
   MapServiceRecord.srv
+  MapServiceSave.srv
+  MapServiceDelete.srv
 )
 
 ## Generate actions in the 'action' folder
