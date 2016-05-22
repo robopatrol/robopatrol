@@ -13,9 +13,11 @@ Robo-Patrol: [![Travis Build Status](https://travis-ci.org/robopatrol/robopatrol
 
 Main project documentation: **[Project Wiki](https://github.com/robopatrol/robopatrol/wiki)**
 
-More technical documentation for developers can be found in [/docs](robopatrol/docs/)
+Technical documentation for developers can be found in [/docs](docs/)
 
 ## Setup ROS and Robopatrol with Docker
+
+By using docker, a lot of the project setup and the downloading of all dependencies can be automated. It is also the way we release the application.
 
 ### Get Docker
 
