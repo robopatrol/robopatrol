@@ -1,5 +1,7 @@
 # Robo-Patrol
 
+ROS (Robot OS) nodes for Turtlebot.
+
 Robo-Patrol: [![Travis Build Status](https://travis-ci.org/robopatrol/robopatrol.svg?branch=master)](https://travis-ci.org/robopatrol/robopatrol)
 [![Coverage Status](https://coveralls.io/repos/github/robopatrol/robopatrol/badge.svg?branch=master)](https://coveralls.io/github/robopatrol/robopatrol?branch=master)
 [![](https://imagelayers.io/badge/robopatrol/robopatrol:latest.svg)](https://imagelayers.io/?images=robopatrol/robopatrol:latest)
@@ -8,8 +10,6 @@ Robo-Patrol: [![Travis Build Status](https://travis-ci.org/robopatrol/robopatrol
 
 [Client Web Application](https://github.com/robopatrol/robopatrol-webapp): [![Travis Build Status](https://travis-ci.org/robopatrol/robopatrol-webapp.svg?branch=master)](https://travis-ci.org/robopatrol/robopatrol-webapp)
 [![Coverage Status](https://coveralls.io/repos/github/robopatrol/robopatrol-webapp/badge.svg?branch=master)](https://coveralls.io/github/robopatrol/robopatrol-webapp?branch=master)
-
-ROS (Robot OS) nodes for Turtlebot.
 
 Main project documentation: **[Project Wiki](https://github.com/robopatrol/robopatrol/wiki)**
 
