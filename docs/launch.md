@@ -4,7 +4,7 @@ There are 2 main launch files. One for simulation (Gazebo) and one for physical 
 
 ![Launch Files](ros-launch.jpg)
 
-Inside a Docker image all of the necessary build commands are executed during image creation. When an image is launched, something like this is executed:
+Inside a Docker image all of the necessary build commands are executed during image creation (mainly catkin setup and build). When an image is launched, something like this is executed:
 
 ```shell
 source $robopatrol_ws/devel/setup.bash && roslaunch robopatrol simulation.launch gui:=false
