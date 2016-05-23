@@ -7,6 +7,11 @@ willow.yaml and icclab.yaml).
 
 The service can also be used from the command line.
 
+## Load default maps
+```sh
+rosservice call /robopatrol/map_service/load_default
+```
+
 ## Start and stop map server
 
 Start the map server:
@@ -20,7 +25,7 @@ Stop the map server:
 rosservice call /robopatrol/map_service/stop
 ```
 
-## Create and delete maps
+## Create map
 
 To create a map, you have to start the slam-gmapping:
 ```sh
@@ -39,7 +44,7 @@ Stop the slam-gmapping node:
 rosservice call /robopatrol/map_service/stop
 ```
 
-Delete a map:
+## Delete map
 ```sh
 rosservice call /robopatrol/map_service/delete map-id
 ```
