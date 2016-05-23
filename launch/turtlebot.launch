@@ -101,7 +101,7 @@
   </include>
 
   <!-- rosbridge websocket server -->
-  <include file="$(find robopatrol)/launch/rosbridge_websocket.launch" >
+  <include file="$(find robopatrol)/launch/includes/rosbridge_websocket.launch" >
     <arg name="port" value="9090"/>
   </include>
 
