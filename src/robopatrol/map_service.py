@@ -50,25 +50,16 @@ class MapService:
             srv.MapServiceDelete,
             self.handle_delete_map_request
         )
+        self.load_default_service = rospy.Service(
+            'robopatrol/map_service/load_default',
+            srv.MapServiceLoadDefault,
+            self.handle_default_map_loading
+        )
 
-        default_maps = [{
-            'name': 'Playground', 'filename': 'playground.yaml'
-        }, {
-            'name': 'Willow', 'filename': 'willow.yaml'
-        }, {
-            'name': 'ICC Lab', 'filename': 'icclab.yaml'
-        }]
-        maps = self.get_maps();
-
-        # ugly way to create default maps
-        for default_map in default_maps:
-            exists = False
-            for existing_map in maps:
-                if existing_map['filename'] == default_map['filename']:
-                    exists = True
-                    break
-            if not exists:
-                self.post_map(default_map)
+        try:
+            self.load_default_maps()
+        except requests.exceptions.RequestException, e:
+            rospy.logwarn(e)
 
         if len(args) > 1:
             self.start_map_server(args[1])
@@ -78,15 +69,25 @@ class MapService:
 
     def handle_save_map_request(self, request):
         data = {'name': request.name, 'filename': request.filename}
-        response = self.post_map(data)
+        success = False
+        try:
+            response = self.post_map(data)
+            success = response.ok
+        except requests.exceptions.RequestException, e:
+            rospy.logwarn(e)
 
-        return srv.MapServiceSaveResponse(success=response.ok)
+        return srv.MapServiceSaveResponse(success=success)
 
     def handle_delete_map_request(self, request):
         data = {'id': request.id}
-        response = self.delete_map(data)
+        success = False
+        try:
+            response = self.delete_map(data)
+            success = response.ok
+        except requests.exceptions.RequestException, e:
+            rospy.logwarn(e)
 
-        return srv.MapServiceDeleteResponse(success=response.ok)
+        return srv.MapServiceDeleteResponse(success=success)
 
     def handle_start_map_server_request(self, request):
         success = self.start_map_server(request.filename)
@@ -102,6 +103,36 @@ class MapService:
         success = self.start_slam_gmapping()
 
         return srv.MapServiceRecordResponse(success=success)
+
+    def handle_default_map_loading(self, request):
+        success = False
+        try:
+            success = self.load_default_maps()
+        except requests.exceptions.RequestException, e:
+            rospy.logwarn(e)
+
+        return srv.MapServiceLoadDefaultResponse(success=success)
+
+    def load_default_maps(self):
+        default_maps = [{
+            'name': 'Playground', 'filename': 'playground.yaml'
+        }, {
+            'name': 'Willow', 'filename': 'willow.yaml'
+        }, {
+            'name': 'ICC Lab', 'filename': 'icclab.yaml'
+        }]
+        maps = self.get_maps()
+
+        for default_map in default_maps:
+            exists = False
+            for existing_map in maps:
+                if existing_map['filename'] == default_map['filename']:
+                    exists = True
+                    break
+            if not exists:
+                response = self.post_map(default_map)
+
+        return True
 
     def get_maps(self):
         response = requests.get(self.rest_url)
@@ -120,11 +151,12 @@ class MapService:
             filename = filename[0:-5]
 
         filepath = '{0}/maps/{1}'.format(ROSPKG.get_path('robopatrol'), filename)
-        subprocess.call(['rosrun', 'map_server', 'map_saver', '-f', filepath])
 
         headers = {'Content-type': 'application/json'}
         json_data = json.dumps(data)
         response = requests.post(self.rest_url, data=json_data, headers=headers)
+        if response.ok:
+            subprocess.call(['rosrun', 'map_server', 'map_saver', '-f', filepath])
 
         return response
 
@@ -220,3 +252,4 @@ class MapService:
         self.save_service.shutdown()
         self.delete_service.shutdown()
         self.record_service.shutdown()
+        self.load_default_service.shutdown()
