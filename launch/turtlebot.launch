@@ -99,13 +99,13 @@
 
 
   </include>
-  
+
   <!-- rosbridge websocket server -->
-  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
+  <include file="$(find robopatrol)/launch/rosbridge_websocket.launch" >
     <arg name="port" value="9090"/>
   </include>
 
   <!-- robopatrol map service -->
-  <node name="map_service" pkg="robopatrol" type="map_service" output="screen" />
+  <node name="map_service" pkg="robopatrol" type="map_service" output="screen" respawn="true" />
 
 </launch>

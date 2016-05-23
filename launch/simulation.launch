@@ -21,8 +21,6 @@
   <arg name="map_file" default="$(env TURTLEBOT_GAZEBO_MAP_FILE)" doc="map file for gazebo simulation"/>
   <arg name="world_file" default="$(env TURTLEBOT_GAZEBO_WORLD_FILE)" doc="world file for gazebo simulation"/>
 
-
-  <node name="map_service" pkg="robopatrol" type="map_service" output="screen" />
   <!-- Map server -->
   <!--<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />-->
 
@@ -96,6 +94,9 @@
     <arg name="initial_pose_y" value="$(arg initial_pose_y)" />
     <arg name="initial_pose_a" value="$(arg initial_pose_a)" />
   </include>
+
+  <!-- robopatrol map service -->
+  <node name="map_service" pkg="robopatrol" type="map_service" output="screen" respawn="true" />
 
   <!-- run autonomous patrol -->
   <!--<node pkg="robopatrol" type="autonomousPatrol" name="autopatrol" output="screen" respawn="false">
