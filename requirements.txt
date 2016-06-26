@@ -1,3 +1,4 @@
+apscheduler
 catkin_pkg
 coverage
 empy
@@ -6,4 +7,3 @@ python-coveralls
 rospkg
 jsonschema
 requests
--e git://github.com/agronholm/apscheduler.git@596c679937040b4fc2ae2b796ce27dcb9df405ca#egg=apscheduler
